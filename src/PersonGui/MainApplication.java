@@ -85,9 +85,25 @@ public class MainApplication {
         frame.setVisible(true);
     }
 
-    private void clearList() {
-        personListModel.clear();
-        persons.clear();
+   private void clearList() {
+    // ask _every_ time
+    int choice = JOptionPane.showConfirmDialog(
+        frame, 
+        "Save the current file before creating a new one?", 
+        "Save Current File?", 
+        JOptionPane.YES_NO_CANCEL_OPTION, 
+        JOptionPane.QUESTION_MESSAGE
+    );
+    if (choice == JOptionPane.CANCEL_OPTION) {
+        // user backed out
+        return;
+    }
+    if (choice == JOptionPane.YES_OPTION) {
+        saveFile();    // your existing save method
+    }
+    // if NO or after saving, clear the list
+    personListModel.clear();
+    persons.clear();
     }
 
     private void openFile() {
