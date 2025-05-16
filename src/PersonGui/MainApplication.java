@@ -116,13 +116,28 @@ public class MainApplication {
         }
     }
 
-    private void saveFileAs() {
-        JFileChooser chooser = new JFileChooser();
-        if (chooser.showSaveDialog(frame) == JFileChooser.APPROVE_OPTION) {
-            currentFile = chooser.getSelectedFile();
-            saveToFile(currentFile);
-        }
+  private void saveFileAs() {
+    JFileChooser chooser = new JFileChooser();
+    chooser.setFileFilter(new FileNameExtensionFilter("Serialized Files", "ser"));
+
+    // pre-fill the filename field:
+    if (currentFile != null) {
+        chooser.setSelectedFile(currentFile);
+    } else {
+        // whatever default you like:
+        chooser.setSelectedFile(new File("people.ser"));
     }
+
+    if (chooser.showSaveDialog(frame) == JFileChooser.APPROVE_OPTION) {
+        File file = chooser.getSelectedFile();
+        // make sure it ends in .ser
+        if (!file.getName().toLowerCase().endsWith(".ser")) {
+            file = new File(file.getParentFile(), file.getName() + ".ser");
+        }
+        currentFile = file;
+        saveToFile(currentFile);
+    }
+}
 
     private void saveToFile(File file) {
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(file))) {
